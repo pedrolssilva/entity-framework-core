@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,77 +14,40 @@ namespace Alura.Loja.Testes.ConsoleApp
     {
         static void Main(string[] args)
         {
-            //GravarUsandoAdoNet();
-            //RecordUsingEntity();
-            RestoreProducts();
-            DeleteProducts();
-            RestoreProducts();
-        }
-
-        private static void UpdateProduct()
-        {
-            //include a product
-            RecordUsingEntity();
-            RestoreProducts();
-
-            // update the product
-            using (var repo = new ProductDAOEntity())
+            using (var context = new StoreContext())
             {
-                Produto first = repo.Products().First();
-                first.Nome = "Cassino Royale - Editado";
-                repo.Update(first);
-            }
-            RestoreProducts();
-        }
+                var serviceProvider = context.GetInfrastructure();
+                var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+                loggerFactory.AddProvider(SqlLoggerProvider.Create());
 
-        private static void DeleteProducts()
-        {
-            using (var repo = new ProductDAOEntity())
-            {
-                IList<Produto> products = repo.Products();
-                foreach (var item in products)
+                var products = context.Produtos.ToList();
+                foreach (var p in products)
                 {
-                    repo.Remove(item);
+                    Console.WriteLine(p);
                 }
-            }
-        }
-
-        private static void RestoreProducts()
-        {
-            using (var repo = new ProductDAOEntity())
-            {
-                IList<Produto> products = repo.Products();
-                Console.WriteLine($"Products found {products.Count}");
-                foreach (var item in products)
+                
+                Console.WriteLine("===================================");
+                foreach (var e in context.ChangeTracker.Entries())
                 {
-                    Console.WriteLine(item.Nome);
+                    Console.WriteLine(e.State);
                 }
-            }
-        }
 
-        private static void RecordUsingEntity()
-        {
-            Produto p = new Produto();
-            p.Nome = "Harry Potter e a Ordem da Fênix";
-            p.Categoria = "Livros";
-            p.Preco = 19.89;
+                var p1 = products.Last();
+                p1.Nome = "007 - The spy who loved me";
+                //context.SaveChanges();
 
-            using (var repo  = new ProductDAOEntity())
-            {
-                repo.Add(p);
-            }
-        }
+                Console.WriteLine("===================================");
+                foreach (var e in context.ChangeTracker.Entries())
+                {
+                    Console.WriteLine(e.State);
+                }
 
-        private static void GravarUsandoAdoNet()
-        {
-            Produto p = new Produto();
-            p.Nome = "Harry Potter e a Ordem da Fênix";
-            p.Categoria = "Livros";
-            p.Preco = 19.89;
-
-            using (var repo = new ProdutoDAO())
-            {
-                repo.Add(p);
+                //Console.WriteLine("===================================");
+                //products = context.Produtos.ToList();
+                //foreach (var p in products)
+                //{
+                //    Console.WriteLine(p);
+                //}
             }
         }
     }
