@@ -10,5 +10,15 @@ namespace Alura.Loja.Testes.ConsoleApp
         public DateTime DataInicio { get; internal set; }
         public string Descricao { get; internal set; }
         public IList<PromocaoProduto> Produtos { get; internal set; }
+
+        public Promocao()
+        {
+            this.Produtos = new List<PromocaoProduto>();
+        }
+
+        internal void IncludeProduct(Produto product)
+        {
+            this.Produtos.Add(new PromocaoProduto() { Produto = product }); 
+        }
     }
 }
