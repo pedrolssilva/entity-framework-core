@@ -8,9 +8,10 @@ using Alura.Loja.Testes.ConsoleApp;
 namespace Alura.Loja.Testes.ConsoleApp.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20220905213715_Promocao")]
+    partial class Promocao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
