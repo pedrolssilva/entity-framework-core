@@ -11,6 +11,7 @@ namespace Alura.Loja.Testes.ConsoleApp
         public double PrecoUnitario { get; internal set; }
         public string Unidade { get; internal set; }
         public IList<PromocaoProduto> Promocoes { get; internal set; }
+        public IList<Compra> Compras { get; internal set; }
 
 
         public override string ToString()
